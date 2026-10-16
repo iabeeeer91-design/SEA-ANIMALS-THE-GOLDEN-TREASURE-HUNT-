@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sea Animals Treasure Hunt - We Can 3 Unit 2</title>
+
+    <!-- Social Media Meta Tags (Open Graph & Twitter Cards) -->
+    <meta property="og:title" content="Sea Animals Treasure Hunt 🌊🏴‍☠️ - Grade 3 English Game">
+    <meta property="og:description" content="العرض التفاعلي لدرس Sea Animals للصف الثالث الابتدائي (We Can 3) - اجمع المفاتيح الـ 10 وافتح كنز الأوقيانوس!">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sea Animals Treasure Hunt 🌊🏴‍☠️">
+    <meta name="twitter:description" content="لعبة وعرض تفاعلي لدرس Sea Animals للصف الثالث الابتدائي - We Can 3 Unit 2">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        comic: ['Comic Neue', 'cursive'],
+                    },
+                    colors: {
+                        ocean: {
+                            dark: '#031B33',
+                            deep: '#0F4C81',
+                            primary: '#1B9AAA',
+                            light: '#48CAE4',
+                            foam: '#E0F7FA'
+                        },
+                        gold: {
+                            DEFAULT: '#FFD700',
+                            dark: '#B8860B',
+                            light: '#FFF099'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Comic Neue', 'Inter', sans-serif;
+            background: linear-gradient(180deg, #021024 0%, #052659 40%, #0F4C81 80%, #021024 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            user-select: none;
+        }
+        .bubbly-btn {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.3);
+        }
+        .bubbly-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+        }
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: floatUp 8s infinite ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+            50% { shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #052659;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1B9AAA;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen overflow-x-hidden relative">
+
+    <div id="bubbles-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="relative z-10 flex-grow flex flex-col justify-between max-w-5xl mx-auto w-full p-4 sm:p-6">
+
+        <!-- Header / Progress Bar HUD -->
+        <header id="hud" class="bg-ocean-dark/80 backdrop-blur-md rounded-2xl p-4 mb-4 border border-cyan-500/30 shadow-xl flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-2xl">
+                    🚢
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-cyan-300 leading-tight">Sea Animals Treasure Hunt</h1>
+                    <p class="text-xs text-cyan-100/70">Grade 3 • We Can 3 • Unit 2</p>
+                </div>
+            </div>
+
+            <!-- Stats & Progress Controls -->
+            <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
+                <!-- Keys Count -->
+                <div class="flex items-center gap-2 bg-yellow-500/20 border border-yellow-400/40 px-3 py-1.5 rounded-xl">
+                    <i class="fa-solid fa-key text-gold text-lg"></i>
+                    <span id="keys-display" class="font-bold text-gold text-lg">0/10</span>
+                </div>
+                <!-- Score Display -->
+                <div class="flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/40 px-3 py-1.5 rounded-xl">
+                    <i class="fa-solid fa-star text-emerald-400 text-lg"></i>
+                    <span id="score-display" class="font-bold text-emerald-300 text-lg">0 pts</span>
+                </div>
+                <!-- Share Button -->
+                <button onclick="openShareModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-share-nodes text-sm"></i>
+                    <span>مشاركة</span>
+                </button>
+                <!-- Teacher Guide Toggle Button -->
+                <button onclick="toggleTeacherGuide()" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <span class="hidden sm:inline">دليل المعلمة</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Map Progress Track -->
+        <div id="map-track" class="hidden mb-6 bg-ocean-deep/60 p-3 rounded-2xl border border-cyan-500/20 shadow-inner">
+            <div class="flex justify-between items-center relative px-2">
+                <div class="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-1.5 bg-cyan-900 rounded-full -z-0"></div>
+                <div id="map-progress-line" class="absolute left-6 top-1/2 -translate-y-1/2 h-1.5 bg-gold rounded-full transition-all duration-500 -z-0" style="width: 0%;"></div>
+                
+                <script>
+                    for(let i=1; i<=10; i++){
+                        document.write(`
+                            <button id="node-${i}" onclick="jumpToStation(${i})" class="relative z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-ocean-dark border-2 border-cyan-400 text-xs sm:text-sm font-bold flex items-center justify-center transition-all shadow-md hover:scale-110">
+                                ${i}
+                            </button>
+                        `);
+                    }
+                </script>
+            </div>
+        </div>
+
+        <!-- Main Game Interactive Display -->
+        <main id="game-card" class="bg-ocean-deep/80 backdrop-blur-lg border-2 border-cyan-400/40 rounded-3xl p-6 sm:p-8 shadow-2xl flex-grow flex flex-col justify-center relative overflow-hidden">
+            <!-- Dynamic Content Injected Here -->
+        </main>
+
+    </div>
+
+    <!-- Social Share Modal -->
+    <div id="share-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-ocean-dark border-2 border-cyan-400/50 rounded-3xl p-6 max-w-md w-full text-center shadow-2xl">
+            <div class="flex justify-between items-center mb-4 border-b border-cyan-500/30 pb-2">
+                <h3 class="text-xl font-bold text-cyan-300">مشاركة اللعبة والعرض التفاعلي 🚀</h3>
+                <button onclick="closeShareModal()" class="text-cyan-300 hover:text-white text-2xl font-bold">✕</button>
+            </div>
+            
+            <p class="text-sm text-cyan-100 mb-6">شارك اللعبة مع الطلاب أو المعلمين عبر المنصات المختلفة:</p>
+
+            <!-- Quick Share Buttons -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button onclick="shareToWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white p-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> واتساب
+                </button>
+                <button onclick="shareToX()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition">
+                    <i class="fa-brands fa-x-twitter text-lg"></i> منصة X
+                </button>
+                <button onclick="shareToTelegram()" class="bg-sky-600 hover:bg-sky-500 text-white p-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition">
+                    <i class="fa-brands fa-telegram text-lg"></i> تلجرام
+                </button>
+                <button onclick="nativeShare()" class="bg-purple-600 hover:bg-purple-500 text-white p-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-share-nodes text-lg"></i> المزيد / الجوال
+                </button>
+            </div>
+
+            <!-- Copy Link Input -->
+            <div class="bg-ocean-deep/80 p-2 rounded-xl border border-cyan-500/30 flex items-center gap-2">
+                <input type="text" id="share-link-input" readonly class="bg-transparent text-xs text-cyan-200 flex-grow px-2 focus:outline-none" value="" />
+                <button onclick="copyShareLink()" class="bg-gold text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs hover:bg-amber-300 transition">
+                    <i class="fa-solid fa-copy mr-1"></i> نسخ
+                </button>
+            </div>
+            <p id="copy-toast" class="text-xs text-emerald-400 mt-2 hidden">تم نسخ الرابط بنجاح!</p>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div id="modal-box" class="bg-ocean-dark border-4 border-gold rounded-3xl p-6 max-w-md w-full text-center shadow-2xl transform transition-all scale-90">
+            <div id="modal-icon" class="text-6xl mb-3">🌟</div>
+            <h2 id="modal-title" class="text-2xl font-bold mb-2 text-gold">Great Job!</h2>
+            <p id="modal-msg" class="text-cyan-100 text-lg mb-6">You found a golden key!</p>
+            
+            <div id="hint-box" class="hidden bg-yellow-500/10 border border-yellow-400/30 p-3 rounded-xl mb-4 text-yellow-200 text-sm italic">
+                <i class="fa-solid fa-lightbulb text-gold mr-1"></i> <span id="hint-text"></span>
+            </div>
+
+            <div class="flex gap-4 justify-center">
+                <button id="modal-btn-retry" onclick="closeModal(false)" class="hidden bubbly-btn bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-3 px-6 rounded-2xl text-lg">
+                    <i class="fa-solid fa-rotate-left mr-2"></i>Try Again
+                </button>
+                <button id="modal-btn-next" onclick="closeModal(true)" class="bubbly-btn bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 px-8 rounded-2xl text-lg">
+                    Next <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher's Guide Modal -->
+    <div id="teacher-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-ocean-dark border-2 border-purple-400/50 rounded-3xl p-6 max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center pb-4 border-b border-purple-400/30">
+                <div>
+                    <h2 class="text-2xl font-bold text-purple-300">Teacher's Guide & Answer Key</h2>
+                    <p class="text-xs text-purple-200/70">دليل المعلمة ونموذج الإجابة لدرس Sea Animals</p>
+                </div>
+                <button onclick="toggleTeacherGuide()" class="text-cyan-300 hover:text-white text-2xl font-bold px-3 py-1">✕</button>
+            </div>
+
+            <div class="overflow-y-auto my-4 space-y-4 pr-2 text-sm text-cyan-100">
+                <div class="bg-purple-900/30 border border-purple-500/30 p-4 rounded-xl">
+                    <h3 class="font-bold text-purple-300 mb-2">تعليمات التشغيل والنشر:</h3>
+                    <ul class="list-disc list-inside space-y-1 text-xs sm:text-sm leading-relaxed">
+                        <li>يمكنك مشاركة هذا العرض مباشرة عبر منصات التواصل (واتساب/تلجرام) للطلاب لممارسته منزلیاً.</li>
+                        <li>التطبيق متوافق بالكامل مع الشاشات الذكية (Smartboards) والأجهزة اللوحية.</li>
+                        <li>عند اكتمال المراحل الـ 10، يستطيع الطالب طباعة الشهادة أو مشاركتها مع المعلمة كإنجاز.</li>
+                    </ul>
+                </div>
+
+                <!-- Answer Key Table -->
+                <table class="w-full text-left border-collapse bg-ocean-deep/50 rounded-xl overflow-hidden text-xs sm:text-sm">
+                    <thead>
+                        <tr class="bg-purple-950/60 text-purple-200">
+                            <th class="p-3">#</th>
+                            <th class="p-3">Station Name</th>
+                            <th class="p-3">Target Skill / Goal</th>
+                            <th class="p-3">Correct Answer</th>
+                            <th class="p-3">Points</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-purple-800/30">
+                        <tr>
+                            <td class="p-3 font-bold text-gold">1</td>
+                            <td class="p-3">Meet Sea Animals</td>
+                            <td class="p-3">Identify animal name</td>
+                            <td class="p-3 text-emerald-400 font-semibold">It's a seahorse.</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">2</td>
+                            <td class="p-3">Find the Animal</td>
+                            <td class="p-3">Word-picture recognition</td>
+                            <td class="p-3 text-emerald-400 font-semibold">a walrus</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">3</td>
+                            <td class="p-3">Match the Words</td>
+                            <td class="p-3">Adjective pairing</td>
+                            <td class="p-3 text-emerald-400 font-semibold">seahorse-slow / whale-big / dolphins-fast</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">4</td>
+                            <td class="p-3">Picture Detective</td>
+                            <td class="p-3">Adjective recognition</td>
+                            <td class="p-3 text-emerald-400 font-semibold">a whale</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">5</td>
+                            <td class="p-3">Guess the Animal</td>
+                            <td class="p-3">Riddle reading comprehension</td>
+                            <td class="p-3 text-emerald-400 font-semibold">a whale</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">6</td>
+                            <td class="p-3">Put Words in Order</td>
+                            <td class="p-3">Sentence structure</td>
+                            <td class="p-3 text-emerald-400 font-semibold">A seal is cute.</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">7</td>
+                            <td class="p-3">What Do You Think?</td>
+                            <td class="p-3">Expressing opinion</td>
+                            <td class="p-3 text-emerald-400 font-semibold">Any valid sentence (e.g., I think it's cute.)</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">8</td>
+                            <td class="p-3">Ask and Answer</td>
+                            <td class="p-3">Singular vs Plural</td>
+                            <td class="p-3 text-emerald-400 font-semibold">It's a seahorse. / They're sharks.</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">9</td>
+                            <td class="p-3">True or False?</td>
+                            <td class="p-3">Statement evaluation</td>
+                            <td class="p-3 text-emerald-400 font-semibold">1. True / 2. False</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-gold">10</td>
+                            <td class="p-3">Ocean Challenge</td>
+                            <td class="p-3">Comprehensive review</td>
+                            <td class="p-3 text-emerald-400 font-semibold">1. Dolphins / 2. scary / 3. fast</td>
+                            <td class="p-3">10 pts</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pt-3 border-t border-purple-400/30 text-right">
+                <button onclick="toggleTeacherGuide()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-6 rounded-xl">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State Management
+        let currentStation = 0; 
+        let keysCollected = [false, false, false, false, false, false, false, false, false, false];
+        let score = 0;
+        let studentName = "Ocean Explorer";
+
+        // SVG Visual Representations
+        const ANIMAL_SVGS = {
+            seahorse: `<svg class="w-28 h-28 mx-auto filter drop-shadow-lg" viewBox="0 0 100 100"><path d="M50 10 C 65 10, 70 25, 60 35 C 55 40, 58 50, 65 55 C 70 60, 65 80, 50 85 C 40 88, 35 75, 45 70 C 50 68, 52 62, 48 58 C 42 52, 40 40, 48 30 Z" fill="#FFB703"/><circle cx="58" cy="20" r="3" fill="#000"/><path d="M50 35 L 45 40 L 50 45" stroke="#FB8500" stroke-width="2" fill="none"/></svg>`,
+            walrus: `<svg class="w-28 h-28 mx-auto filter drop-shadow-lg" viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="35" ry="25" fill="#8D6E63"/><circle cx="35" cy="45" r="18" fill="#A1887F"/><circle cx="30" cy="42" r="2.5" fill="#000"/><path d="M38 52 L36 68 M42 52 L40 68" stroke="#FFF" stroke-width="4" stroke-linecap="round"/><ellipse cx="25" cy="50" rx="4" ry="2" fill="#5D4037"/></svg>`,
+            sharks: `<svg class="w-28 h-28 mx-auto filter drop-shadow-lg" viewBox="0 0 100 100"><path d="M10 50 C 30 20, 70 25, 90 50 C 70 75, 30 80, 10 50 Z" fill="#64748B"/><path d="M50 28 L 62 10 L 65 32 Z" fill="#475569"/><circle cx="75" cy="45" r="3" fill="#000"/><path d="M70 60 L 80 52 L 75 50" stroke="#FFF" stroke-width="2" fill="none"/></svg>`,
+            whale: `<svg class="w-32 h-32 mx-auto filter drop-shadow-lg" viewBox="0 0 100 100"><path d="M10 55 C 10 25, 60 20, 85 50 C 95 60, 85 80, 60 80 C 30 80, 10 70, 10 55 Z" fill="#0284C7"/><ellipse cx="50" cy="70" rx="20" ry="6" fill="#BAE6FD" opacity="0.6"/><circle cx="70" cy="48" r="3.5" fill="#000"/><path d="M45 25 Q 45 10 40 5 M45 25 Q 50 10 55 5" stroke="#38BDF8" stroke-width="3" fill="none"/></svg>`,
+            seal: `<svg class="w-28 h-28 mx-auto filter drop-shadow-lg" viewBox="0 0 100 100"><path d="M20 65 C 20 40, 50 30, 75 45 C 85 50, 80 75, 60 75 C 35 75, 20 75, 20 65 Z" fill="#94A3B8"/><circle cx="68" cy="45" r="14" fill="#CBD5E1"/><circle cx="72" cy="42" r="2.5" fill="#000"/><ellipse cx="76" cy="47" rx="3" ry="2" fill="#475569"/></svg>`,
+            dolphins: `<svg class="w-28 h-28 mx-auto filter drop-shadow-lg" viewBox="0 0 100 100"><path d="M15 60 C 25 25, 65 20, 88 45 C 70 65, 45 70, 15 60 Z" fill="#38BDF8"/><path d="M48 30 L 58 12 L 62 33 Z" fill="#0284C7"/><circle cx="76" cy="40" r="3" fill="#000"/><path d="M82 48 Q 75 55 70 50" stroke="#0284C7" stroke-width="2" fill="none"/></svg>`
+        };
+
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 40 + 10;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                bubble.style.animationDuration = `${Math.random() * 6 + 6}s`;
+                container.appendChild(bubble);
+            }
+        }
+
+        function updateHUD() {
+            const count = keysCollected.filter(Boolean).length;
+            document.getElementById('keys-display').innerText = `${count}/10`;
+            document.getElementById('score-display').innerText = `${score} pts`;
+            
+            const mapLine = document.getElementById('map-progress-line');
+            if (mapLine) {
+                mapLine.style.width = `${((currentStation) / 10) * 100}%`;
+            }
+
+            for (let i = 1; i <= 10; i++) {
+                const node = document.getElementById(`node-${i}`);
+                if (node) {
+                    if (keysCollected[i - 1]) {
+                        node.className = "relative z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gold text-slate-900 border-2 border-yellow-200 font-bold flex items-center justify-center shadow-lg";
+                        node.innerHTML = `<i class="fa-solid fa-key text-xs"></i>`;
+                    } else if (i === currentStation) {
+                        node.className = "relative z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-cyan-400 text-slate-900 border-2 border-white font-bold flex items-center justify-center scale-125 pulse-glow";
+                        node.innerText = i;
+                    } else {
+                        node.className = "relative z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-ocean-dark border-2 border-cyan-700 text-cyan-400/60 font-bold flex items-center justify-center opacity-70";
+                        node.innerText = i;
+                    }
+                }
+            }
+        }
+
+        function jumpToStation(num) {
+            if (num <= currentStation || keysCollected[num - 2] || num === 1) {
+                currentStation = num;
+                renderStation();
+            }
+        }
+
+        function showFeedback(isCorrect, title, message, hint = "") {
+            const modal = document.getElementById('feedback-modal');
+            const icon = document.getElementById('modal-icon');
+            const titleEl = document.getElementById('modal-title');
+            const msgEl = document.getElementById('modal-msg');
+            const hintBox = document.getElementById('hint-box');
+            const hintText = document.getElementById('hint-text');
+            const retryBtn = document.getElementById('modal-btn-retry');
+            const nextBtn = document.getElementById('modal-btn-next');
+
+            modal.classList.remove('hidden');
+
+            if (isCorrect) {
+                icon.innerText = "🔑";
+                titleEl.innerText = title || "Great Job!";
+                titleEl.className = "text-2xl font-bold mb-2 text-gold";
+                msgEl.innerText = message || "You found a golden key!";
+                hintBox.classList.add('hidden');
+                retryBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+
+                if (currentStation >= 1 && currentStation <= 10 && !keysCollected[currentStation - 1]) {
+                    keysCollected[currentStation - 1] = true;
+                    score += 10;
+                    updateHUD();
+                }
+            } else {
+                icon.innerText = "🌊";
+                titleEl.innerText = title || "Try Again!";
+                titleEl.className = "text-2xl font-bold mb-2 text-cyan-300";
+                msgEl.innerText = message || "Look closely and give it another try!";
+                if (hint) {
+                    hintText.innerText = hint;
+                    hintBox.classList.remove('hidden');
+                } else {
+                    hintBox.classList.add('hidden');
+                }
+                retryBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        function closeModal(isNext) {
+            document.getElementById('feedback-modal').classList.add('hidden');
+            if (isNext) {
+                currentStation++;
+                renderStation();
+            }
+        }
+
+        function renderStation() {
+            const card = document.getElementById('game-card');
+            const mapTrack = document.getElementById('map-track');
+
+            if (currentStation === 0) {
+                mapTrack.classList.add('hidden');
+                renderIntro(card);
+            } else if (currentStation >= 1 && currentStation <= 10) {
+                mapTrack.classList.remove('hidden');
+                updateHUD();
+                switch (currentStation) {
+                    case 1: renderStation1(card); break;
+                    case 2: renderStation2(card); break;
+                    case 3: renderStation3(card); break;
+                    case 4: renderStation4(card); break;
+                    case 5: renderStation5(card); break;
+                    case 6: renderStation6(card); break;
+                    case 7: renderStation7(card); break;
+                    case 8: renderStation8(card); break;
+                    case 9: renderStation9(card); break;
+                    case 10: renderStation10(card); break;
+                }
+            } else if (currentStation === 11) {
+                mapTrack.classList.add('hidden');
+                renderFinalTreasure(card);
+            } else if (currentStation === 12) {
+                mapTrack.classList.add('hidden');
+                renderCertificate(card);
+            }
+        }
+
+        // --- INTRO SCREEN ---
+        function renderIntro(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-6 max-w-2xl mx-auto py-4">
+                    <div class="inline-block px-4 py-1.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 text-sm font-semibold mb-2">
+                        🌟 Underwater English Adventure
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-gold to-amber-400">
+                        Sea Animals Treasure Hunt
+                    </h1>
+                    
+                    <div class="flex justify-center items-center gap-6 my-4">
+                        <div class="text-6xl animate-bounce">🥽</div>
+                        <div class="text-7xl">🪙</div>
+                        <div class="text-6xl animate-bounce" style="animation-delay: 0.3s">🐙</div>
+                    </div>
+
+                    <div class="bg-ocean-dark/60 border border-cyan-500/30 p-6 rounded-2xl text-left sm:text-center text-cyan-100 space-y-3 shadow-inner">
+                        <p class="text-xl font-bold text-gold">Welcome, Ocean Explorer!</p>
+                        <p class="text-base sm:text-lg">Find the <span class="text-gold font-bold">10 golden keys</span> by completing sea animal challenges.</p>
+                        <p class="text-base sm:text-lg">Open the golden treasure chest!</p>
+                    </div>
+
+                    <div class="pt-2 flex flex-col sm:flex-row justify-center items-center gap-4">
+                        <button onclick="currentStation=1; renderStation();" class="bubbly-btn bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-extrabold text-2xl px-10 py-4 rounded-3xl shadow-xl transform transition hover:scale-105">
+                            <i class="fa-solid fa-play mr-2"></i> Start Adventure
+                        </button>
+                        <button onclick="openShareModal()" class="bubbly-btn bg-cyan-700 hover:bg-cyan-600 text-white font-bold text-lg px-6 py-4 rounded-3xl shadow-lg border border-cyan-400/30">
+                            <i class="fa-solid fa-share-nodes mr-2"></i> مشاركة العرض
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- STATIONS 1 TO 10 ---
+        function renderStation1(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-6">
+                    <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 1: Meet the Sea Animals</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Look at the sea animal!</h2>
+                    
+                    <div class="p-6 bg-ocean-dark/50 rounded-3xl border border-cyan-500/30 max-w-sm mx-auto shadow-xl">
+                        ${ANIMAL_SVGS.seahorse}
+                        <p class="mt-4 text-2xl font-bold text-cyan-200">What’s that?</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
+                        <button onclick="showFeedback(true, 'Excellent!', 'You identified the seahorse correctly!')" class="bubbly-btn bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-6 rounded-2xl text-lg border border-cyan-300/30">
+                            It’s a seahorse.
+                        </button>
+                        <button onclick="showFeedback(false, 'Not quite!', 'Look at its shape. It looks like a tiny sea horse!', 'Look at the picture: It is a small seahorse!')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-cyan-100 font-bold py-3.5 px-6 rounded-2xl text-lg border border-cyan-500/30">
+                            It’s a dolphin.
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStation2(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-6">
+                    <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 2: Find the Animal</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Which word matches this animal?</h2>
+                    
+                    <div class="p-6 bg-ocean-dark/50 rounded-3xl border border-cyan-500/30 max-w-sm mx-auto shadow-xl">
+                        ${ANIMAL_SVGS.walrus}
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg mx-auto">
+                        <button onclick="showFeedback(false, 'Try again!', 'This animal has big tusks!', 'Hint: A walrus is fat and has tusks.')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-500/30">
+                            a whale
+                        </button>
+                        <button onclick="showFeedback(true, 'Great Job!', 'Correct! It is a fat walrus!')" class="bubbly-btn bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-300/30">
+                            a walrus
+                        </button>
+                        <button onclick="showFeedback(false, 'Try again!', 'Check the picture again.', 'Hint: A seahorse is tiny.')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-500/30">
+                            a seahorse
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStation3(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-4">
+                    <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 3: Match the Words</div>
+                    <h2 class="text-2xl font-bold text-white">Match each sea animal to its adjective!</h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto my-2">
+                        <div class="bg-ocean-dark/60 p-4 rounded-2xl border border-cyan-500/30 flex flex-col items-center">
+                            ${ANIMAL_SVGS.seahorse}
+                            <p class="font-bold my-2 text-yellow-300">A Seahorse</p>
+                            <select id="s3-seahorse" class="bg-ocean-deep text-white border border-cyan-400 rounded-xl p-2 w-full text-center font-bold">
+                                <option value="">Choose...</option>
+                                <option value="fast">fast</option>
+                                <option value="slow">slow</option>
+                                <option value="big">big</option>
+                            </select>
+                        </div>
+                        <div class="bg-ocean-dark/60 p-4 rounded-2xl border border-cyan-500/30 flex flex-col items-center">
+                            ${ANIMAL_SVGS.whale}
+                            <p class="font-bold my-2 text-yellow-300">A Whale</p>
+                            <select id="s3-whale" class="bg-ocean-deep text-white border border-cyan-400 rounded-xl p-2 w-full text-center font-bold">
+                                <option value="">Choose...</option>
+                                <option value="fast">fast</option>
+                                <option value="slow">slow</option>
+                                <option value="big">big</option>
+                            </select>
+                        </div>
+                        <div class="bg-ocean-dark/60 p-4 rounded-2xl border border-cyan-500/30 flex flex-col items-center">
+                            ${ANIMAL_SVGS.dolphins}
+                            <p class="font-bold my-2 text-yellow-300">Dolphins</p>
+                            <select id="s3-dolphins" class="bg-ocean-deep text-white border border-cyan-400 rounded-xl p-2 w-full text-center font-bold">
+                                <option value="">Choose...</option>
+                                <option value="fast">fast</option>
+                                <option value="slow">slow</option>
+                                <option value="big">big</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button onclick="checkStation3()" class="bubbly-btn bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-lg px-8 py-3 rounded-2xl shadow-lg mt-2">
+                        Check Matches
+                    </button>
+                </div>
+            `;
+        }
+
+        function checkStation3() {
+            const sh = document.getElementById('s3-seahorse').value;
+            const wh = document.getElementById('s3-whale').value;
+            const dol = document.getElementById('s3-dolphins').value;
+
+            if (sh === 'slow' && wh === 'big' && dol === 'fast') {
+                showFeedback(true, 'Superb Matching!', 'Seahorse is slow, Whale is big, Dolphins are fast!');
+            } else {
+                showFeedback(false, 'Try Again!', 'Think: Seahorses swim slowly, whales are giant, and dolphins swim fast!', 'Remember: Seahorse = slow | Whale = big | Dolphins = fast');
+            }
+        }
+
+        function renderStation4(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-6">
+                    <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 4: Picture Detective</div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Which animal is BIG?</h2>
+
+                    <div class="grid grid-cols-3 gap-3 max-w-lg mx-auto">
+                        <div class="bg-ocean-dark/50 p-3 rounded-2xl border border-cyan-500/30">${ANIMAL_SVGS.seahorse}</div>
+                        <div class="bg-ocean-dark/50 p-3 rounded-2xl border border-cyan-500/30">${ANIMAL_SVGS.whale}</div>
+                        <div class="bg-ocean-dark/50 p-3 rounded-2xl border border-cyan-500/30">${ANIMAL_SVGS.seal}</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg mx-auto">
+                        <button onclick="showFeedback(false, 'Not quite!', 'Seahorses are tiny.', 'Hint: The whale is huge!')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-500/30">
+                            a seahorse
+                        </button>
+                        <button onclick="showFeedback(true, 'Spot on!', 'A whale is huge and big!')" class="bubbly-btn bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-300/30">
+                            a whale
+                        </button>
+                        <button onclick="showFeedback(false, 'Not quite!', 'Seals are cute, but whales are big.', 'Hint: Look for the blue ocean giant!')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-500/30">
+                            a seal
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStation5(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-6">
+                    <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 5: Guess the Animal Riddle</div>
+                    
+                    <div class="bg-gradient-to-b from-ocean-dark to-ocean-deep p-6 rounded-3xl border-2 border-yellow-400/40 max-w-md mx-auto shadow-2xl">
+                        <div class="text-yellow-400 text-3xl mb-2"><i class="fa-solid fa-circle-question"></i> Riddle</div>
+                        <p class="text-2xl font-bold text-white leading-relaxed">
+                            “I am big.<br>I live in the sea.<br><span class="text-gold">What am I?”</span>
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg mx-auto">
+                        <button onclick="showFeedback(true, 'Riddle Solved!', 'Yes! A whale is big and lives in the sea!')" class="bubbly-btn bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-300/30">
+                            a whale
+                        </button>
+                        <button onclick="showFeedback(false, 'Try again!', 'A seahorse is small.', 'Hint: Which sea animal is BIG?')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-500/30">
+                            a seahorse
+                        </button>
+                        <button onclick="showFeedback(false, 'Try again!', 'Seals are cute.', 'Hint: Think of the biggest sea animal!')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-white font-bold py-3.5 px-4 rounded-2xl text-lg border border-cyan-500/30">
+                            a seal
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        let station6Words = [];
+        function renderStation6(card) {
+            station6Words = [];
+            card.innerHTML = `
+                <div class="text-center space-y-6">
+                    <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 6: Put the Words in Order</div>
+                    <h2 class="text-2xl font-bold text-white">Tap the words to build the correct sentence:</h2>
+
+                    <div id="s6-dropzone" class="bg-ocean-dark/80 min-h-[70px] border-2 border-dashed border-cyan-400 rounded-2xl p-3 flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto text-xl font-bold text-gold">
+                        <span class="text-cyan-400/50 text-sm font-normal">Your sentence will appear here...</span>
+                    </div>
+
+                    <div id="s6-buttons" class="flex flex-wrap justify-center gap-3 max-w-md mx-auto">
+                        <button onclick="addS6Word('A seal', this)" class="bubbly-btn bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-5 py-3 rounded-xl text-lg">A seal</button>
+                        <button onclick="addS6Word('cute.', this)" class="bubbly-btn bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-5 py-3 rounded-xl text-lg">cute.</button>
+                        <button onclick="addS6Word('is', this)" class="bubbly-btn bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-5 py-3 rounded-xl text-lg">is</button>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="resetS6()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-4 py-2 rounded-xl text-sm">
+                            <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Reset
+                        </button>
+                        <button onclick="checkS6()" class="bubbly-btn bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold px-8 py-2.5 rounded-xl text-lg">
+                            Check Sentence
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addS6Word(word, btn) {
+            station6Words.push(word);
+            btn.style.visibility = 'hidden';
+            const dropzone = document.getElementById('s6-dropzone');
+            dropzone.innerHTML = station6Words.map(w => `<span class="bg-cyan-600 text-white px-3 py-1 rounded-lg shadow">${w}</span>`).join(' ');
+        }
+
+        function resetS6() {
+            renderStation6(document.getElementById('game-card'));
+        }
+
+        function checkS6() {
+            const result = station6Words.join(' ');
+            if (result === "A seal is cute.") {
+                showFeedback(true, 'Great Sentence!', '“A seal is cute.” is completely correct!');
+            } else {
+                showFeedback(false, 'Try Again!', 'Order should be: Subject -> Verb -> Adjective.', 'Hint: Start with "A seal..."');
+            }
+        }
+
+        function renderStation7(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-5">
+                    <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 7: Expressing Opinion</div>
+                    <h2 class="text-2xl font-bold text-white">What do you think about it?</h2>
+
+                    <div class="bg-ocean-dark/50 p-4 rounded-3xl border border-cyan-500/30 max-w-xs mx-auto">
+                        ${ANIMAL_SVGS.seal}
+                    </div>
+
+                    <p class="text-cyan-200 text-sm">Choose an English sentence that gives your opinion:</p>
+
+                    <div class="grid grid-cols-1 gap-3 max-w-md mx-auto">
+                        <button onclick="showFeedback(true, 'Awesome Opinion!', 'Nice! You expressed your opinion: I think it’s cute.')" class="bubbly-btn bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-3 px-6 rounded-2xl text-left border border-cyan-400/30 flex items-center gap-3">
+                            <span class="text-gold text-xl">💡</span> I think it’s cute.
+                        </button>
+                        <button onclick="showFeedback(true, 'Great Opinion!', 'Good job! You said: I think it’s big.')" class="bubbly-btn bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-3 px-6 rounded-2xl text-left border border-cyan-400/30 flex items-center gap-3">
+                            <span class="text-gold text-xl">💡</span> I think it’s big.
+                        </button>
+                        <button onclick="showFeedback(true, 'Valid Opinion!', 'Good job! You expressed your opinion clearly!')" class="bubbly-btn bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-3 px-6 rounded-2xl text-left border border-cyan-400/30 flex items-center gap-3">
+                            <span class="text-gold text-xl">💡</span> I think it’s scary.
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        let s8Step = 1;
+        function renderStation8(card) {
+            if (s8Step === 1) {
+                card.innerHTML = `
+                    <div class="text-center space-y-6">
+                        <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 8 (Part 1/2): Singular Question</div>
+                        
+                        <div class="p-4 bg-ocean-dark/50 rounded-3xl border border-cyan-500/30 max-w-xs mx-auto">
+                            ${ANIMAL_SVGS.seahorse}
+                            <p class="text-2xl font-bold text-yellow-300 mt-2">What’s that?</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
+                            <button onclick="s8Step=2; renderStation8(document.getElementById('game-card'));" class="bubbly-btn bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-6 rounded-2xl text-lg">
+                                It’s a seahorse.
+                            </button>
+                            <button onclick="showFeedback(false, 'Check Singular/Plural', 'There is only ONE seahorse!', 'Hint: Use It’s a... for singular!')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-cyan-100 font-bold py-3.5 px-6 rounded-2xl text-lg">
+                                They’re seahorses.
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <div class="text-center space-y-6">
+                        <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 8 (Part 2/2): Plural Question</div>
+                        
+                        <div class="p-4 bg-ocean-dark/50 rounded-3xl border border-cyan-500/30 max-w-xs mx-auto">
+                            ${ANIMAL_SVGS.sharks}
+                            <p class="text-2xl font-bold text-yellow-300 mt-2">What are those?</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
+                            <button onclick="showFeedback(false, 'Check Plural!', 'There are MULTIPLE sharks here!', 'Hint: Use They’re... for plural!')" class="bubbly-btn bg-cyan-800 hover:bg-cyan-700 text-cyan-100 font-bold py-3.5 px-6 rounded-2xl text-lg">
+                                It’s a shark.
+                            </button>
+                            <button onclick="s8Step=1; showFeedback(true, 'Grammar Master!', 'Correct! It’s a seahorse (singular) and They’re sharks (plural)!')" class="bubbly-btn bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-6 rounded-2xl text-lg">
+                                They’re sharks.
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        let s9Step = 1;
+        function renderStation9(card) {
+            if (s9Step === 1) {
+                card.innerHTML = `
+                    <div class="text-center space-y-6">
+                        <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 9 (Part 1/2): True or False</div>
+                        
+                        <div class="p-4 bg-ocean-dark/50 rounded-3xl border border-cyan-500/30 max-w-xs mx-auto">
+                            ${ANIMAL_SVGS.dolphins}
+                            <p class="text-2xl font-bold text-white mt-3">“Dolphins are fast.”</p>
+                        </div>
+
+                        <div class="flex justify-center gap-6 max-w-xs mx-auto">
+                            <button onclick="s9Step=2; renderStation9(document.getElementById('game-card'));" class="bubbly-btn bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-4 px-8 rounded-2xl text-xl w-1/2">
+                                TRUE
+                            </button>
+                            <button onclick="showFeedback(false, 'Think again!', 'Dolphins swim very quickly!', 'Hint: Dolphins swim fast in the ocean.')" class="bubbly-btn bg-rose-600 hover:bg-rose-500 text-white font-extrabold py-4 px-8 rounded-2xl text-xl w-1/2">
+                                FALSE
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <div class="text-center space-y-6">
+                        <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 9 (Part 2/2): True or False</div>
+                        
+                        <div class="p-4 bg-ocean-dark/50 rounded-3xl border border-cyan-500/30 max-w-xs mx-auto">
+                            ${ANIMAL_SVGS.whale}
+                            <p class="text-2xl font-bold text-white mt-3">“A whale is small.”</p>
+                        </div>
+
+                        <div class="flex justify-center gap-6 max-w-xs mx-auto">
+                            <button onclick="showFeedback(false, 'Think again!', 'Whales are huge, not small!', 'Hint: A whale is very BIG!')" class="bubbly-btn bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-4 px-8 rounded-2xl text-xl w-1/2">
+                                TRUE
+                            </button>
+                            <button onclick="s9Step=1; showFeedback(true, 'Great Logic!', 'Correct! Whales are BIG, not small!')" class="bubbly-btn bg-rose-600 hover:bg-rose-500 text-white font-extrabold py-4 px-8 rounded-2xl text-xl w-1/2">
+                                FALSE
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        let s10Answers = { q1: false, q2: false, q3: false };
+        function renderStation10(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-4">
+                    <div class="inline-block bg-cyan-900/60 px-4 py-1 rounded-full text-cyan-300 text-xs font-bold uppercase tracking-wider">Station 10: Grand Ocean Challenge</div>
+                    <h2 class="text-2xl font-bold text-white">Answer all 3 review mini-questions:</h2>
+
+                    <div class="space-y-3 max-w-lg mx-auto text-left text-sm">
+                        <div class="bg-ocean-dark/60 p-3 rounded-2xl border border-cyan-500/30">
+                            <p class="font-bold text-yellow-300 mb-1">1. Identify the animal: 🐬</p>
+                            <div class="flex gap-2">
+                                <button id="s10-q1-a" onclick="s10Answers.q1=true; highlightS10('s10-q1-a', 's10-q1-b')" class="bg-ocean-deep hover:bg-cyan-600 px-3 py-1.5 rounded-xl border border-cyan-400 text-xs">Dolphins</button>
+                                <button id="s10-q1-b" onclick="s10Answers.q1=false; highlightS10('s10-q1-b', 's10-q1-a')" class="bg-ocean-deep hover:bg-cyan-600 px-3 py-1.5 rounded-xl border border-cyan-400 text-xs">Walrus</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-ocean-dark/60 p-3 rounded-2xl border border-cyan-500/30">
+                            <p class="font-bold text-yellow-300 mb-1">2. Choose adjective for sharks 🦈:</p>
+                            <div class="flex gap-2">
+                                <button id="s10-q2-a" onclick="s10Answers.q2=true; highlightS10('s10-q2-a', 's10-q2-b')" class="bg-ocean-deep hover:bg-cyan-600 px-3 py-1.5 rounded-xl border border-cyan-400 text-xs">scary</button>
+                                <button id="s10-q2-b" onclick="s10Answers.q2=false; highlightS10('s10-q2-b', 's10-q2-a')" class="bg-ocean-deep hover:bg-cyan-600 px-3 py-1.5 rounded-xl border border-cyan-400 text-xs">cute</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-ocean-dark/60 p-3 rounded-2xl border border-cyan-500/30">
+                            <p class="font-bold text-yellow-300 mb-1">3. Complete opinion: “I don’t think whales are ____.”</p>
+                            <div class="flex gap-2">
+                                <button id="s10-q3-a" onclick="s10Answers.q3=true; highlightS10('s10-q3-a', 's10-q3-b')" class="bg-ocean-deep hover:bg-cyan-600 px-3 py-1.5 rounded-xl border border-cyan-400 text-xs">fast</button>
+                                <button id="s10-q3-b" onclick="s10Answers.q3=false; highlightS10('s10-q3-b', 's10-q3-a')" class="bg-ocean-deep hover:bg-cyan-600 px-3 py-1.5 rounded-xl border border-cyan-400 text-xs">big</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="checkS10()" class="bubbly-btn bg-gold hover:bg-amber-400 text-slate-950 font-black text-lg px-8 py-3 rounded-2xl shadow-xl mt-2">
+                        Submit Final Challenge
+                    </button>
+                </div>
+            `;
+        }
+
+        function highlightS10(selectedId, unselectedId) {
+            document.getElementById(selectedId).className = "bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-xl border border-yellow-200 text-xs";
+            document.getElementById(unselectedId).className = "bg-ocean-deep hover:bg-cyan-600 text-white px-3 py-1.5 rounded-xl border border-cyan-400 text-xs";
+        }
+
+        function checkS10() {
+            if (s10Answers.q1 && s10Answers.q2 && s10Answers.q3) {
+                showFeedback(true, '10th Key Unlocked!', 'Congratulations! You solved the Ocean Challenge!');
+            } else {
+                showFeedback(false, 'Review Answers!', 'Check your answers: Dolphins, sharks are scary, and whales are not fast.', 'Hint: Review animal traits from previous stations!');
+            }
+        }
+
+        function renderFinalTreasure(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-6 max-w-xl mx-auto">
+                    <div class="text-6xl animate-bounce">👑</div>
+                    <h2 class="text-3xl sm:text-4xl font-black text-gold">
+                        You found all 10 golden keys!
+                    </h2>
+                    <p class="text-xl text-cyan-100">The ocean treasure chest is ready to open!</p>
+
+                    <div class="bg-ocean-dark/80 p-6 rounded-3xl border-2 border-gold/60 shadow-2xl space-y-4">
+                        <p class="text-lg font-bold text-yellow-300">Final Treasure Question:</p>
+                        <p class="text-cyan-100">“Look at the sea animals. Choose the correct sentence.”</p>
+                        
+                        <div class="my-2">${ANIMAL_SVGS.dolphins}</div>
+
+                        <div class="grid grid-cols-1 gap-3 text-left">
+                            <button onclick="currentStation=12; renderStation();" class="bubbly-btn bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold p-4 rounded-2xl text-lg flex items-center gap-3">
+                                <span class="bg-gold text-slate-950 w-8 h-8 rounded-full flex items-center justify-center font-black">A</span>
+                                Dolphins are fast.
+                            </button>
+                            <button onclick="showFeedback(false, 'Try again!', 'Dolphins are not slow!', 'Hint: Dolphins swim with high speed.')" class="bubbly-btn bg-ocean-dark border border-cyan-500/40 text-cyan-200 font-bold p-4 rounded-2xl text-lg flex items-center gap-3">
+                                <span class="bg-cyan-800 text-white w-8 h-8 rounded-full flex items-center justify-center font-black">B</span>
+                                Dolphins are slow.
+                            </button>
+                            <button onclick="showFeedback(false, 'Try again!', 'Whales are big, but dolphins are known for speed.', 'Hint: Select option A.')" class="bubbly-btn bg-ocean-dark border border-cyan-500/40 text-cyan-200 font-bold p-4 rounded-2xl text-lg flex items-center gap-3">
+                                <span class="bg-cyan-800 text-white w-8 h-8 rounded-full flex items-center justify-center font-black">C</span>
+                                Dolphins are big.
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CERTIFICATE SCREEN WITH SHARE IN ACHIEVEMENT ---
+        function renderCertificate(card) {
+            card.innerHTML = `
+                <div class="text-center space-y-6 max-w-2xl mx-auto">
+                    <div class="bg-gradient-to-b from-amber-100 to-yellow-50 text-slate-900 p-8 rounded-3xl border-8 border-gold shadow-2xl relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 text-9xl opacity-10 text-amber-900 pointer-events-none">🏆</div>
+                        
+                        <div class="border-2 border-amber-400 p-6 rounded-2xl">
+                            <p class="text-xs font-black tracking-widest text-amber-800 uppercase mb-1">Official Award of Excellence</p>
+                            <h2 class="text-3xl sm:text-4xl font-black text-amber-900 mb-2">SEA ANIMALS TREASURE HUNT</h2>
+                            <p class="text-sm font-bold text-amber-700 italic mb-6">Ocean Explorer Award</p>
+
+                            <p class="text-base text-slate-700 mb-2">This is proudly presented to:</p>
+                            
+                            <input type="text" id="student-name-input" value="${studentName}" onchange="studentName=this.value" class="bg-transparent border-b-2 border-amber-600 text-center text-2xl sm:text-3xl font-black text-amber-950 focus:outline-none w-full max-w-md mx-auto mb-4"/>
+
+                            <p class="text-xl font-extrabold text-emerald-700 my-4">
+                                “You are a Sea Animals Star!”
+                            </p>
+
+                            <div class="flex justify-between items-end mt-8 pt-4 border-t border-amber-300 text-xs font-bold text-amber-800">
+                                <div>
+                                    <p>Grade 3 • We Can 3</p>
+                                    <p>Unit 2: Sea Animals</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl">🏅</div>
+                                    <p>10/10 Keys • 100 Points</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <button onclick="window.print()" class="bubbly-btn bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-2xl">
+                            <i class="fa-solid fa-print mr-2"></i> طباعة الشهادة
+                        </button>
+                        <button onclick="shareCertificate()" class="bubbly-btn bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-2xl">
+                            <i class="fa-solid fa-share-nodes mr-2"></i> مشاركة الإنجاز
+                        </button>
+                        <button onclick="location.reload()" class="bubbly-btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-6 rounded-2xl">
+                            <i class="fa-solid fa-rotate-right mr-2"></i> لعب مرة أخرى
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- SOCIAL SHARE LOGIC ---
+        function getShareMessage() {
+            return encodeURIComponent("🎮🌊 العرض التفاعلي لدرس Sea Animals للصف الثالث الابتدائي (We Can 3 Unit 2)!\n\nخض المغامرة واجمع المفاتيح الـ 10 وافتح الكنز الذهبي ✨👇\n");
+        }
+
+        function getAppURL() {
+            return encodeURIComponent(window.location.href);
+        }
+
+        function openShareModal() {
+            document.getElementById('share-link-input').value = window.location.href;
+            document.getElementById('share-modal').classList.remove('hidden');
+        }
+
+        function closeShareModal() {
+            document.getElementById('share-modal').classList.add('hidden');
+            document.getElementById('copy-toast').classList.add('hidden');
+        }
+
+        function copyShareLink() {
+            const linkInput = document.getElementById('share-link-input');
+            linkInput.select();
+            navigator.clipboard.writeText(linkInput.value);
+            const toast = document.getElementById('copy-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function shareToWhatsApp() {
+            window.open(`https://api.whatsapp.com/send?text=${getShareMessage()}${getAppURL()}`, '_blank');
+        }
+
+        function shareToX() {
+            window.open(`https://twitter.com/intent/tweet?text=${getShareMessage()}&url=${getAppURL()}`, '_blank');
+        }
+
+        function shareToTelegram() {
+            window.open(`https://t.me/share/url?url=${getAppURL()}&text=${getShareMessage()}`, '_blank');
+        }
+
+        function nativeShare() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Sea Animals Treasure Hunt 🌊',
+                    text: 'العرض التفاعلي لدرس Sea Animals - الصف الثالث الابتدائي (We Can 3)',
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                copyShareLink();
+            }
+        }
+
+        function shareCertificate() {
+            const text = encodeURIComponent(`🏆 لقد أنهى البطل (${studentName}) جميع تحديات Sea Animals Treasure Hunt بحصوله على 10/10 مفاتيح ذهبية! 🌟🎉\n\nجرب اللعبة الآن:\n`);
+            if (navigator.share) {
+                navigator.share({
+                    title: 'شهادة تفوق - Sea Animals Treasure Hunt',
+                    text: `🏆 لقد أنهى البطل (${studentName}) جميع تحديات Sea Animals Treasure Hunt بحصوله على 10/10 مفاتيح ذهبية! 🌟🎉`,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                window.open(`https://api.whatsapp.com/send?text=${text}${getAppURL()}`, '_blank');
+            }
+        }
+
+        function toggleTeacherGuide() {
+            const modal = document.getElementById('teacher-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        window.onload = function() {
+            createBubbles();
+            renderStation();
+        };
+    </script>
+</body>
+</html>
